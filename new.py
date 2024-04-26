@@ -1,14 +1,18 @@
 import cv2
 import numpy as np
 
-image = cv2.imread('Image/rectangles.png')
+# Load the image
+image_path = 'Image/rectangles.png'
+image = cv2.imread(image_path)
+
+# Convert to grayscale
 gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
-# Detect edges using Canny
-edges = cv2.Canny(gray, 50, 150)
+# Threshold the image to get binary image
+_, binary = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
 
-# Find contours (rectangles)
-contours, _ = cv2.findContours(edges, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+# Find contours (lines within rectangles)
+contours, _ = cv2.findContours(binary, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
 # Initialize a dictionary to store rectangle lengths and their corresponding approximated contours
 rectangle_data = {}
@@ -45,7 +49,10 @@ for rect, number in enumerate(sorted_rectangles, start=1):
                     cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 1, cv2.LINE_AA)
     else:
         print(f"No data found for rectangle {rect}")
-# Show the image with numbers
-cv2.imshow('Numbered Rectangles', image)
-cv2.waitKey(0)
-cv2.destroyAllWindows()
+
+# Save the labeled image
+output_path = "labeled_image.jpg"
+cv2.imwrite(output_path, image)
+
+# Print a success message
+print(f"Labeled image saved as {output_path}")

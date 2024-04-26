@@ -50,7 +50,7 @@ def align(img):
         rect = cv2.minAreaRect(c)  # center , width , height and angle
 
         box = cv2.boxPoints(rect)
-        box = np.int0(box)
+        box = np.intp(box)
 
         # Retrieve the key parameters of the rotated bounding box
         center = (int(rect[0][0]), int(rect[0][1]))
